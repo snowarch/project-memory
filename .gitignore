@@ -1,0 +1,7 @@
+pmem
+*.db
+*.db-journal
+.env
+dist/
+build/
+vendor/
