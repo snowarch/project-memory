@@ -1,52 +1,52 @@
 # Contributing to Project Memory Bank
 
-Gracias por tu interés en contribuir a Project Memory Bank.
+Thank you for your interest in contributing to Project Memory Bank.
 
-## Proceso de Desarrollo
+## Development Process
 
-### 1. Fork y Clone
+### 1. Fork and Clone
 
 ```bash
-# Fork en GitHub, luego:
-git clone https://github.com/tu-usuario/project-memory.git
+# Fork on GitHub, then:
+git clone https://github.com/your-username/project-memory.git
 cd project-memory
 ```
 
 ### 2. Setup
 
 ```bash
-# Instalar dependencias
+# Install dependencies
 go mod download
 
-# Compilar
+# Build
 make build
 
-# Ejecutar tests
+# Run tests
 go test -v ./...
 ```
 
-### 3. Crear Branch
+### 3. Create Branch
 
 ```bash
-git checkout -b feature/tu-feature
-# o
-git checkout -b fix/tu-bug-fix
+git checkout -b feature/your-feature
+# or
+git checkout -b fix/your-bug-fix
 ```
 
-### 4. Desarrollo
+### 4. Development
 
-- Escribe código limpio y testeado
-- Sigue convenciones de Go (gofmt, golint)
-- Añade tests para nuevas funcionalidades
-- Actualiza documentación si es necesario
+- Write clean and tested code
+- Follow Go conventions (gofmt, golint)
+- Add tests for new features
+- Update documentation if necessary
 
 ### 5. Tests
 
 ```bash
-# Tests unitarios
+# Unit tests
 go test -v ./...
 
-# Tests con coverage
+# Tests with coverage
 go test -cover ./...
 
 # Race detector
@@ -58,41 +58,41 @@ golangci-lint run
 
 ### 6. Commit
 
-Usa [Conventional Commits](https://www.conventionalcommits.org/):
+Use [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-feat: añadir soporte para Java projects
-fix: corregir detección de versiones en Go
-docs: actualizar README con ejemplos
-test: añadir tests para scanner
-refactor: simplificar lógica de repositories
+feat: add support for Java projects
+fix: correct version detection in Go
+docs: update README with examples
+test: add tests for scanner
+refactor: simplify repository logic
 ```
 
-### 7. Push y PR
+### 7. Push and PR
 
 ```bash
-git push origin feature/tu-feature
+git push origin feature/your-feature
 ```
 
-Crea Pull Request en GitHub con:
-- Título descriptivo
-- Descripción clara de cambios
-- Screenshots si aplica
-- Referencias a issues relacionados
+Create Pull Request on GitHub with:
+- Descriptive title
+- Clear description of changes
+- Screenshots if applicable
+- References to related issues
 
-## Guías de Código
+## Code Guidelines
 
-### Estructura
+### Structure
 
 ```go
-// Comentarios para funciones públicas
+// Comments for public functions
 func PublicFunction(arg string) error {
-    // Validación primero
+    // Validation first
     if arg == "" {
         return fmt.Errorf("arg cannot be empty")
     }
     
-    // Lógica
+    // Logic
     result := processArg(arg)
     
     return nil
@@ -136,54 +136,54 @@ func TestFunction(t *testing.T) {
 ### Logging
 
 ```go
-// Usar logger en lugar de fmt
+// Use logger instead of fmt
 logger.Debug("Processing project: %s", projectName)
 logger.Info("Scan complete: %d projects", count)
 logger.Warn("Failed to detect tech: %v", err)
 logger.Error("Critical error: %v", err)
 ```
 
-## Áreas de Contribución
+## Contribution Areas
 
-### Prioridad Alta
-- [ ] Soporte para más lenguajes (Java, C++, C#)
-- [ ] Extracción de TODOs de código fuente
-- [ ] Cache de análisis IA
-- [ ] Rate limiting para API calls
+### High Priority
+- [ ] Support for more languages (Java, C++, C#)
+- [ ] TODO extraction from source code
+- [ ] AI analysis caching
+- [ ] Rate limiting for API calls
 
-### Prioridad Media
-- [ ] Comando `search` para búsqueda avanzada
-- [ ] Export a JSON/CSV
+### Medium Priority
+- [ ] `search` command for advanced search
+- [ ] Export to JSON/CSV
 - [ ] Git commit history analysis
 - [ ] Dependency vulnerability scanning
 
-### Prioridad Baja
-- [ ] Web dashboard (opcional)
+### Low Priority
+- [ ] Web dashboard (optional)
 - [ ] Plugin system
 - [ ] Custom templates
-- [ ] Multi-language support en UI
+- [ ] Multi-language support in UI
 
-## Reportar Bugs
+## Bug Reporting
 
-Usa [GitHub Issues](https://github.com/snowarch/project-memory/issues) con:
+Use [GitHub Issues](https://github.com/snowarch/project-memory/issues) with:
 
-- **Título claro**: "Error al escanear proyectos Rust"
-- **Descripción**: Qué esperabas vs qué ocurrió
-- **Steps to reproduce**: Pasos exactos
+- **Clear title**: "Error scanning Rust projects"
+- **Description**: What you expected vs what happened
+- **Steps to reproduce**: Exact steps
 - **Environment**: OS, Go version, pmem version
-- **Logs**: Output con `--verbose` si aplica
+- **Logs**: Output with `--verbose` if applicable
 
-## Preguntas
+## Questions
 
-Para preguntas generales, usa [GitHub Discussions](https://github.com/snowarch/project-memory/discussions).
+For general questions, use [GitHub Discussions](https://github.com/snowarch/project-memory/discussions).
 
-## Código de Conducta
+## Code of Conduct
 
-- Sé respetuoso y constructivo
-- Acepta feedback con apertura
-- Enfócate en lo mejor para el proyecto
-- Ayuda a otros contributors
+- Be respectful and constructive
+- Accept feedback openly
+- Focus on what's best for the project
+- Help other contributors
 
-## Licencia
+## License
 
-Al contribuir, aceptas que tu código se licencia bajo MIT License.
+By contributing, you agree that your code is licensed under MIT License.

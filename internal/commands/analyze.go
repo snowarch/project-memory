@@ -103,7 +103,7 @@ func readREADME(projectPath string) string {
 
 	content := string(data)
 	
-	// Truncar a 4000 caracteres para optimizar tokens
+	// Truncate to 4000 characters to optimize tokens
 	maxLen := 4000
 	if len(content) > maxLen {
 		return content[:maxLen] + "\n... (truncated)"
