@@ -18,13 +18,41 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.21'
+        go-version: '1.25.x' # pick the minor you support (1.25.x or 1.21.x)
+
+    - name: Cache Go modules
+      uses: actions/cache@v4
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
 
     - name: Download dependencies
       run: go mod download
 
+    - name: Install gum (for interactive tests)
+      run: |
+        curl -L https://github.com/charmbracelet/gum/releases/latest/download/gum_linux_amd64.tar.gz | tar xz
+        sudo mv gum /usr/local/bin/
+
+    - name: Verify dependencies
+      run: go mod verify
+
     - name: Run tests
-      run: go test -v -race -coverprofile=coverage.out ./...
+      run: |
+        echo "go version: $(go version)"
+        echo "go env:"
+        go env
+        set -o pipefail
+        # capture full output, keep exit code for proper CI signal
+        go test -v -race -coverprofile=coverage.out ./... 2>&1 | tee test.log
+        rc=${PIPESTATUS[0]}
+        if [ $rc -ne 0 ]; then
+          echo "==== TESTS FAILED: printing full log ===="
+          cat test.log
+          exit $rc
+        fi
 
     - name: Upload coverage
       uses: codecov/codecov-action@v4
@@ -44,10 +72,48 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.21'
+        go-version: '1.25.x' # pick the minor you support (1.25.x or 1.21.x)
+
+    - name: Cache Go modules
+      uses: actions/cache@v4
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Install gum (for build)
+      run: |
+        curl -L https://github.com/charmbracelet/gum/releases/latest/download/gum_linux_amd64.tar.gz | tar xz
+        sudo mv gum /usr/local/bin/
+
+    - name: Download dependencies
+      run: go mod download
 
     - name: Build
       run: make build
 
-    - name: Test binary
+    - name: Test binary help
       run: ./pmem --help
+
+    - name: Test binary version
+      run: ./pmem agent-optimized --action health
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.25.x' # pick the minor you support (1.25.x or 1.21.x)
+
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+        args: --timeout=5m
