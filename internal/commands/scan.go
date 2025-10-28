@@ -88,7 +88,7 @@ var scanCmd = &cobra.Command{
 				}
 			}
 
-			logger.Progress("  ✓ %s (%s)", project.Name, project.Path)
+			logger.Progress("  %s (%s)", project.Name, project.Path)
 		}
 
 		logger.Info("\nScan complete: %d added, %d updated", added, updated)

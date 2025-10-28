@@ -58,7 +58,7 @@ var contextCmd = &cobra.Command{
 				if err != nil {
 					return fmt.Errorf("failed to write JSON file: %w", err)
 				}
-				fmt.Printf("📋 Context exported to: %s\n", outputFile)
+				fmt.Printf("Context exported to: %s\n", outputFile)
 			} else {
 				fmt.Print(string(jsonData))
 			}
@@ -71,7 +71,7 @@ var contextCmd = &cobra.Command{
 				if err != nil {
 					return fmt.Errorf("failed to write Markdown file: %w", err)
 				}
-				fmt.Printf("📋 Context exported to: %s\n", outputFile)
+				fmt.Printf("Context exported to: %s\n", outputFile)
 			} else {
 				fmt.Print(mdData)
 			}
@@ -94,7 +94,7 @@ var contextCmd = &cobra.Command{
 			mdData := context.ExportToMarkdown()
 			os.WriteFile(mdFile, []byte(mdData), 0644)
 			
-			fmt.Printf("📋 Context exported to:\n")
+			fmt.Printf("Context exported to:\n")
 			fmt.Printf("  JSON: %s\n", jsonFile)
 			fmt.Printf("  Markdown: %s\n", mdFile)
 			

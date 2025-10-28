@@ -71,3 +71,18 @@ func init() {
 	searchCmd.Flags().IntP("limit", "l", 0, "Limit number of results")
 	rootCmd.AddCommand(searchCmd)
 }
+
+func getStatusIcon(status string) string {
+	switch status {
+	case "active":
+		return "ACTIVE"
+	case "paused":
+		return "PAUSED"
+	case "archived":
+		return "ARCHIVED"
+	case "completed":
+		return "DONE"
+	default:
+		return "UNKNOWN"
+	}
+}

@@ -45,13 +45,13 @@ var listCmd = &cobra.Command{
 func showInteractiveMenu(projects []models.Project, autoIDE bool, ideName string, exportContext string) error {
 	var choices []string
 	for _, p := range projects {
-		statusIcon := getStatusIcon(string(p.Status))
-		line := fmt.Sprintf("%s %s | %s | Progress: %d%%", statusIcon, p.Name, p.Status, p.Progress)
+		statusIndicator := getStatusIndicator(string(p.Status))
+		line := fmt.Sprintf("[%s] %s | %s | Progress: %d%%", statusIndicator, p.Name, p.Status, p.Progress)
 		choices = append(choices, line)
 	}
 
-	// Add special options
-	choices = append(choices, "🚀 Open in IDE", "📋 Generate Context", "📄 Export Handoff")
+	// Add professional action options
+	choices = append(choices, "[ACTION] Open in IDE", "[ACTION] Generate Context", "[ACTION] Export Handoff")
 
 	gumCmd := exec.Command("gum", "choose", "--header=Select a project or action:")
 	gumCmd.Stdin = strings.NewReader(strings.Join(choices, "\n"))
@@ -69,11 +69,11 @@ func showInteractiveMenu(projects []models.Project, autoIDE bool, ideName string
 
 	// Handle special actions
 	switch selected {
-	case "🚀 Open in IDE":
+	case "[ACTION] Open in IDE":
 		return showIDESelectionMenu(projects)
-	case "📋 Generate Context":
+	case "[ACTION] Generate Context":
 		return showContextGenerationMenu(projects)
-	case "📄 Export Handoff":
+	case "[ACTION] Export Handoff":
 		return showHandoffMenu(projects)
 	}
 
@@ -83,15 +83,19 @@ func showInteractiveMenu(projects []models.Project, autoIDE bool, ideName string
 		return nil
 	}
 
-	projectName := strings.TrimSpace(strings.TrimPrefix(parts[0], getStatusIcon(statusFilter)))
-	projectName = strings.TrimSpace(projectName)
-
-	for _, p := range projects {
-		if p.Name == projectName {
-			if autoIDE {
-				return openProjectInIDE(p.Path, ideName)
+	// Extract project name from [STATUS] format
+	projectPart := strings.TrimSpace(parts[0])
+	if strings.HasPrefix(projectPart, "[") {
+		if idx := strings.Index(projectPart, "]"); idx != -1 {
+			projectName := strings.TrimSpace(projectPart[idx+1:])
+			for _, p := range projects {
+				if p.Name == projectName {
+					if autoIDE {
+						return openProjectInIDE(p.Path, ideName)
+					}
+					return showProjectActions(p)
+				}
 			}
-			return showProjectActions(p)
 		}
 	}
 
@@ -99,23 +103,22 @@ func showInteractiveMenu(projects []models.Project, autoIDE bool, ideName string
 }
 
 func showNonBlockingMenu(projects []models.Project, autoIDE bool, ideName string, exportContext string) error {
-	// Create a simple text-based menu for non-interactive environments
+	// Create a clean text-based menu for non-interactive environments
 	fmt.Println("Available Projects:")
 	fmt.Println("==================")
 	
 	for i, p := range projects {
-		statusIcon := getStatusIcon(string(p.Status))
-		fmt.Printf("%d. %s %s | %s | Progress: %d%%\n", 
-			i+1, statusIcon, p.Name, p.Status, p.Progress)
+		statusIndicator := getStatusIndicator(string(p.Status))
+		fmt.Printf("%d. [%s] %s | %s | Progress: %d%%\n", 
+			i+1, statusIndicator, p.Name, p.Status, p.Progress)
 	}
 	
-	fmt.Println("\nSpecial Actions:")
+	fmt.Println("\nAvailable Actions:")
 	fmt.Println("99. Open project in IDE")
 	fmt.Println("98. Generate context for agents")
 	fmt.Println("97. Export handoff documentation")
 	
-	// For non-blocking mode, we can't wait for user input
-	// Instead, we provide instructions for programmatic use
+	// For non-blocking mode, we provide instructions for programmatic use
 	fmt.Println("\nNon-blocking mode active.")
 	fmt.Println("Use environment variables or flags to specify actions:")
 	fmt.Println("  export PMEM_SELECTED_PROJECT='project-name'")
@@ -260,12 +263,12 @@ func showHandoffMenu(projects []models.Project) error {
 
 func showProjectActions(project models.Project) error {
 	choices := []string{
-		"🚀 Open in IDE",
-		"📋 View Details",
-		"📄 Generate Handoff",
-		"🤖 Generate Context",
-		"📊 Show Insights",
-		"🔄 Update Status",
+		"[ACTION] Open in IDE",
+		"[ACTION] View Details",
+		"[ACTION] Generate Handoff",
+		"[ACTION] Generate Context",
+		"[ACTION] Show Insights",
+		"[ACTION] Update Status",
 	}
 
 	gumCmd := exec.Command("gum", "choose", "--header=Select action:")
@@ -283,17 +286,17 @@ func showProjectActions(project models.Project) error {
 	}
 
 	switch selected {
-	case "🚀 Open in IDE":
+	case "[ACTION] Open in IDE":
 		return openProjectInIDE(project.Path, "")
-	case "📋 View Details":
+	case "[ACTION] View Details":
 		return showProjectDetails(project.ID)
-	case "📄 Generate Handoff":
+	case "[ACTION] Generate Handoff":
 		return generateHandoffDocument(&project)
-	case "🤖 Generate Context":
+	case "[ACTION] Generate Context":
 		return generateProjectContext(&project, "Both")
-	case "📊 Show Insights":
+	case "[ACTION] Show Insights":
 		return showProjectInsights(&project)
-	case "🔄 Update Status":
+	case "[ACTION] Update Status":
 		return updateProjectStatus(&project)
 	}
 
@@ -317,7 +320,7 @@ func openProjectInIDE(projectPath, ideName string) error {
 		return fmt.Errorf("failed to open project in IDE: %w", err)
 	}
 
-	fmt.Printf("🚀 Opening project in %s...\n", ideName)
+	fmt.Printf("Opening project in %s...\n", ideName)
 	return nil
 }
 
@@ -345,7 +348,7 @@ func generateProjectContext(project *models.Project, format string) error {
 		if err != nil {
 			return fmt.Errorf("failed to write JSON file: %w", err)
 		}
-		fmt.Printf("📋 Context exported to: %s\n", filename)
+		fmt.Printf("Context exported to: %s\n", filename)
 		
 	case "Markdown":
 		filename := fmt.Sprintf("/tmp/%s-context.md", project.Name)
@@ -354,7 +357,7 @@ func generateProjectContext(project *models.Project, format string) error {
 		if err != nil {
 			return fmt.Errorf("failed to write Markdown file: %w", err)
 		}
-		fmt.Printf("📋 Context exported to: %s\n", filename)
+		fmt.Printf("Context exported to: %s\n", filename)
 		
 	case "Both":
 		jsonFile := fmt.Sprintf("/tmp/%s-context.json", project.Name)
@@ -369,7 +372,7 @@ func generateProjectContext(project *models.Project, format string) error {
 		mdData := context.ExportToMarkdown()
 		os.WriteFile(mdFile, []byte(mdData), 0644)
 		
-		fmt.Printf("📋 Context exported to:\n")
+		fmt.Printf("Context exported to:\n")
 		fmt.Printf("  JSON: %s\n", jsonFile)
 		fmt.Printf("  Markdown: %s\n", mdFile)
 	}
@@ -391,7 +394,7 @@ func generateHandoffDocument(project *models.Project) error {
 		return fmt.Errorf("failed to write handoff file: %w", err)
 	}
 
-	fmt.Printf("📄 Handoff document generated: %s\n", filename)
+	fmt.Printf("Handoff document generated: %s\n", filename)
 	return nil
 }
 
@@ -409,28 +412,28 @@ func showProjectInsights(project *models.Project) error {
 	}
 
 	insights := fmt.Sprintf(`
-📊 Project Insights: %s
+Project Insights: %s
 ========================
 
-🎯 Overview:
+Overview:
   Type: %s
   Status: %s
   Progress: %d%%
   Activity Level: %s
   Last Modified: %s
 
-🛠️ Technologies: %d detected
+Technologies: %d detected
   %s
 
-📁 Recent Activity: %d files in last 7 days
+Recent Activity: %d files in last 7 days
   %s
 
-🚀 Quick Start:
+Quick Start:
   Setup: %v
   Dev: %s
   Test: %s
 
-📦 Git Information:
+Git Information:
   Has Uncommitted: %v
   Branch: %s
 
@@ -494,23 +497,23 @@ func updateProjectStatus(project *models.Project) error {
 		return fmt.Errorf("failed to update project: %w", err)
 	}
 
-	fmt.Printf("✅ Project status updated to: %s\n", newStatus)
+	fmt.Printf("Project status updated to: %s\n", newStatus)
 	return nil
 }
 
-// Helper functions
-func getStatusIcon(status string) string {
+// Helper functions - Professional status indicators
+func getStatusIndicator(status string) string {
 	switch status {
 	case "active":
-		return "●"
+		return "ACTIVE"
 	case "paused":
-		return "◐"
+		return "PAUSED"
 	case "archived":
-		return "○"
+		return "ARCHIVED"
 	case "completed":
-		return "✓"
+		return "DONE"
 	default:
-		return "•"
+		return "UNKNOWN"
 	}
 }
 

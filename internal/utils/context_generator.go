@@ -501,7 +501,7 @@ func (ctx *AgentContext) ExportToMarkdown() string {
 	md.WriteString(fmt.Sprintf("**Activity:** %s  \n\n", ctx.ActivityLevel))
 
 	if ctx.QuickStart != nil {
-		md.WriteString("## 🚀 Quick Start\n\n")
+		md.WriteString("## Quick Start\n\n")
 		if len(ctx.QuickStart.SetupCommands) > 0 {
 			md.WriteString("**Setup:**\n```bash\n")
 			for _, cmd := range ctx.QuickStart.SetupCommands {
@@ -515,7 +515,7 @@ func (ctx *AgentContext) ExportToMarkdown() string {
 	}
 
 	if len(ctx.Technologies) > 0 {
-		md.WriteString("## 🛠️ Technologies\n\n")
+		md.WriteString("## Technologies\n\n")
 		for _, tech := range ctx.Technologies {
 			if tech.Version != "" {
 				md.WriteString(fmt.Sprintf("- **%s** %s (%s)\n", tech.Name, tech.Version, tech.Type))
@@ -527,7 +527,7 @@ func (ctx *AgentContext) ExportToMarkdown() string {
 	}
 
 	if len(ctx.ImportantFiles) > 0 {
-		md.WriteString("## 📁 Important Files\n\n")
+		md.WriteString("## Important Files\n\n")
 		for _, file := range ctx.ImportantFiles {
 			md.WriteString(fmt.Sprintf("- `%s`\n", file))
 		}
@@ -535,7 +535,7 @@ func (ctx *AgentContext) ExportToMarkdown() string {
 	}
 
 	if ctx.GitInfo != nil {
-		md.WriteString("## 📦 Git Information\n\n")
+		md.WriteString("## Git Information\n\n")
 		if ctx.GitInfo.Remote != "" {
 			md.WriteString(fmt.Sprintf("**Remote:** %s  \n", ctx.GitInfo.Remote))
 		}
@@ -546,4 +546,8 @@ func (ctx *AgentContext) ExportToMarkdown() string {
 	}
 
 	return md.String()
+}
+
+func GetCurrentTimestamp() int64 {
+	return time.Now().Unix()
 }

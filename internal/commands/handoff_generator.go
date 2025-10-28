@@ -21,7 +21,7 @@ func generateHandoffDocContent(project *models.Project) (string, error) {
 	doc.WriteString(fmt.Sprintf("**Location:** `%s`  \n\n", project.Path))
 
 	// Project Overview
-	doc.WriteString("## 📋 Project Overview\n\n")
+	doc.WriteString("## Project Overview\n\n")
 	if project.Description != "" {
 		doc.WriteString(fmt.Sprintf("%s\n\n", project.Description))
 	} else {
@@ -29,7 +29,7 @@ func generateHandoffDocContent(project *models.Project) (string, error) {
 	}
 
 	// Current State Analysis
-	doc.WriteString("## 🔄 Current State Analysis\n\n")
+	doc.WriteString("## Current State Analysis\n\n")
 	analyzer := scanner.NewProjectStateAnalyzer(project.Path)
 	activity, suggestedProgress, confidence, insights := analyzer.AnalyzeProjectActivity()
 
@@ -46,7 +46,7 @@ func generateHandoffDocContent(project *models.Project) (string, error) {
 	}
 
 	// Technologies
-	doc.WriteString("## 🛠️ Technology Stack\n\n")
+	doc.WriteString("## Technology Stack\n\n")
 	
 	// Generate context for technologies
 	generator := utils.NewContextGenerator(project.Path)
@@ -72,7 +72,7 @@ func generateHandoffDocContent(project *models.Project) (string, error) {
 
 	// Git Information
 	if project.IsGitRepo {
-		doc.WriteString("## 📦 Git Information\n\n")
+		doc.WriteString("## Git Information\n\n")
 		if project.GitRemote != "" {
 			doc.WriteString(fmt.Sprintf("**Remote:** %s  \n", project.GitRemote))
 		}
@@ -83,7 +83,7 @@ func generateHandoffDocContent(project *models.Project) (string, error) {
 	}
 
 	// Quick Start Instructions
-	doc.WriteString("## 🚀 Quick Start\n\n")
+	doc.WriteString("## Quick Start\n\n")
 	doc.WriteString("```bash\n")
 	doc.WriteString(fmt.Sprintf("cd %s\n", project.Path))
 	
@@ -102,7 +102,7 @@ func generateHandoffDocContent(project *models.Project) (string, error) {
 
 	// Important Files
 	if len(context.ImportantFiles) > 0 {
-		doc.WriteString("## 📄 Important Files\n\n")
+		doc.WriteString("## Important Files\n\n")
 		for _, file := range context.ImportantFiles {
 			doc.WriteString(fmt.Sprintf("- `%s` - Configuration/Documentation\n", file))
 		}
@@ -111,12 +111,12 @@ func generateHandoffDocContent(project *models.Project) (string, error) {
 
 	// Notes and Context
 	if project.Notes != "" {
-		doc.WriteString("## 📝 Notes & Context\n\n")
+		doc.WriteString("## Notes & Context\n\n")
 		doc.WriteString(fmt.Sprintf("%s\n\n", project.Notes))
 	}
 
 	// Next Steps
-	doc.WriteString("## 🎯 Recommended Next Steps\n\n")
+	doc.WriteString("## Recommended Next Steps\n\n")
 	doc.WriteString("1. **Review Current State** - Check recent changes and uncommitted work\n")
 	doc.WriteString("2. **Run Tests** - Ensure everything is working correctly\n")
 	doc.WriteString("3. **Check Dependencies** - Update if necessary\n")
@@ -124,7 +124,7 @@ func generateHandoffDocContent(project *models.Project) (string, error) {
 	doc.WriteString("5. **Setup Development Environment** - Follow quick start instructions\n\n")
 
 	// Contact Information
-	doc.WriteString("## 📞 Handoff Information\n\n")
+	doc.WriteString("## Handoff Information\n\n")
 	doc.WriteString(fmt.Sprintf("**Handoff Date:** %s  \n", time.Now().Format("2006-01-02")))
 	doc.WriteString(fmt.Sprintf("**Project Age:** %s  \n", time.Since(project.CreatedAt).Round(24*time.Hour)))
 	doc.WriteString(fmt.Sprintf("**Last Updated:** %s  \n", project.UpdatedAt.Format("2006-01-02 15:04:05")))

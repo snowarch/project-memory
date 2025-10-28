@@ -63,7 +63,7 @@ var autoUpdateCmd = &cobra.Command{
 					if len(insights) > 0 {
 						fmt.Printf("  Insights:\n")
 						for _, insight := range insights {
-							fmt.Printf("    • %s\n", insight)
+							fmt.Printf("    - %s\n", insight)
 						}
 					}
 					fmt.Println()
@@ -93,7 +93,7 @@ var autoUpdateCmd = &cobra.Command{
 					updatedCount++
 					insightsCount += len(insights)
 
-					fmt.Printf("✓ Updated %s: %s activity, %d%% progress", 
+					fmt.Printf("Updated %s: %s activity, %d%% progress", 
 						project.Name, activity, suggestedProgress)
 					if oldProgress != suggestedProgress {
 						fmt.Printf(" (was %d%%)", oldProgress)

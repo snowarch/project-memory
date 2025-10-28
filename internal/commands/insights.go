@@ -66,14 +66,14 @@ var insightsCmd = &cobra.Command{
 		analyzer := scanner.NewProjectStateAnalyzer(project.Path)
 		activity, suggestedProgress, confidence, insights := analyzer.AnalyzeProjectActivity()
 
-		fmt.Printf("📊 Activity Analysis:\n")
+		fmt.Printf("Activity Analysis:\n")
 		fmt.Printf("   Activity Level: %s\n", activity)
 		fmt.Printf("   Suggested Progress: %d%%\n", suggestedProgress)
 		fmt.Printf("   Confidence: %.1f%%\n", confidence*100)
 		if len(insights) > 0 {
 			fmt.Printf("   Insights:\n")
 			for _, insight := range insights {
-				fmt.Printf("     • %s\n", insight)
+				fmt.Printf("     - %s\n", insight)
 			}
 		}
 		fmt.Println()
@@ -117,7 +117,7 @@ var insightsCmd = &cobra.Command{
 				if err != nil {
 					logger.Warn("Failed to generate next actions: %v", err)
 				} else {
-					fmt.Printf("🎯 Next Actions (%s available):\n%s\n", timeAvailable, nextActions)
+					fmt.Printf("Next Actions (%s available):\n%s\n", timeAvailable, nextActions)
 					fmt.Printf("💰 Additional Tokens: %d\n", tokens2)
 				}
 			}
@@ -135,7 +135,7 @@ var insightsCmd = &cobra.Command{
 				return fmt.Errorf("AI summary failed: %w", err)
 			}
 
-			fmt.Printf("📋 Developer Handoff Summary:\n%s\n\n", summary)
+			fmt.Printf("Developer Handoff Summary:\n%s\n\n", summary)
 			fmt.Printf("💰 Tokens Used: %d\n", tokens)
 		}
 
